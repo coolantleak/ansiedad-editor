@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="node_modules/xterm/css/xterm.css" />
+    <script src="node_modules/xterm/lib/xterm.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    
+    <title>ANSIedad</title>
+</head>
+<body style="background-color:rgb(190, 190, 190);">
+    <div id="terminal"></div>
+
+    <br>
+
+    <ul>
+        <li>
+            <label for="exprField" class="text" >Expression</label>
+            <input type="text" id="exprField" size="80">
+        </li>
+        <li>
+            <label for="fps" class="text">MAX FPS</label>
+            <input type="number" id="fpsField">
+        </li>
+        <li>
+            <label for="asciiEnabledCheckbox" class="text">ASCII</label>
+            <input type="checkbox" id="asciiEnabledCheckbox" checked>
+        </li>
+        <li>
+            <button id="applyButton">Apply</button>
+        </li>
+        <br>
+        <li>
+            <button id="linkButton">Generate Link</button>
+        </li>
+        <li>
+            <input type="text" id="linkField" size="80">
+        </li>
+    </ul>
+
+    <script src="ansiedad.js"></script>
+</body>
+</html>
