@@ -1,7 +1,8 @@
 // Settings and default values
 let expr = `t`
 let fpsCap = 15;
-let asciiEnabled = false;
+let asciiEnabled = true;
+let drawBg = true;
 let scrollerMode = false;
 let width = 80;
 let height = 25;
@@ -65,7 +66,12 @@ async function main(e) {
         
         r=(color+100)%256
         //g=(color+50)%256
-        b=color
+        b=0
+        if(drawBg)
+        {
+            b=color;
+        }
+
 
         buf[i]=(`\x1b[38;5;${r}m\x1b[48;5;${b}m${ch}`);
         exprResultElement.value = color
@@ -85,11 +91,11 @@ async function main(e) {
 function updateSettings()
 {
     console.log('Updating values')
-    
 
     expr = document.getElementById('exprField').value;
     fpsCap = parseInt(document.getElementById('fpsField').value);
     asciiEnabled = document.getElementById('asciiEnabledCheckbox').checked;
+    drawBg = document.getElementById('drawBgCheckbox').checked;
 }
 
 document.getElementById('linkButton').onclick = function() {
@@ -103,6 +109,11 @@ document.getElementById('linkButton').onclick = function() {
     if(scrollerMode)
     {
         link += `&scrollBuf=${scrollerBufsize}`
+    }
+
+    if(!drawBg)
+    {
+        link += `&hideBg=${!drawBg}`
     }
 
     console.log(`Link: ${link}`)
@@ -144,11 +155,16 @@ if(urlParams.has('rows'))
     height = urlParams.get('rows');
 }
 
+if(urlParams.has('hideBg'))
+{
+    drawBg = !urlParams.has('hideBg');
+}
+
 // Set view
 document.getElementById('exprField').value = expr;
 document.getElementById('fpsField').value = fpsCap;
 document.getElementById('asciiEnabledCheckbox').checked = asciiEnabled;
-
+document.getElementById('drawBgCheckbox').checked = drawBg;
 document.addEventListener('keydown', onSubmit);
 
 main();
