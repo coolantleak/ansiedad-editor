@@ -1,0 +1,32 @@
+from browser import document, window, timer
+from browser.widgets.dialog import InfoDialog
+
+fps=60
+expr='t'
+t=0
+buf_size=64*16
+buf=['']*buf_size
+
+def click(ev):
+    document["mybutton"].bind("click", click)
+    draw_buf()
+
+def draw_buf():
+    global fps, expr, t, buf_size, buf
+
+    i=0
+    while i<buf_size:
+        eval_exp=eval(expr)
+        color = eval_exp % 256
+        ch = chr(t%94+32)
+        #print(ch)
+        #print(i)
+        buf[i] = f'\x1b[48;5;{color}m{ch}'
+        t+=1
+        i+=1
+    window.term.write(''.join(buf))
+
+    
+
+# bind event 'click' on button to function echo
+document["mybutton"].bind("click", click)

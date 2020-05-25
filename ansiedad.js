@@ -52,7 +52,7 @@ async function main(e) {
         if(i >= bufSize)
         {
             i=0;
-            term.write(buf.join(''));
+            term.write(''.join(buf));
             await sleep(1000/fpsCap);
         }
         t += 1;
