@@ -12,6 +12,7 @@ let scrollerBufsize = 64;
 // Globals
 let bufSize;
 let term;
+let error = false;
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -26,6 +27,7 @@ function onSubmit(e)
 }
 
 async function main(e) {
+    
     term = new Terminal({
         cols: width,
         rows: height,
@@ -44,48 +46,67 @@ async function main(e) {
     
     while (true) 
     {
-        if(scrollerMode)
+        try 
         {
-            bufSize = scrollerBufsize;
-        }
-        else
-        {
-            bufSize = term.cols * term.rows;
-        }
+            if(scrollerMode)
+            {
+                bufSize = scrollerBufsize;
+            }
+            else
+            {
+                bufSize = term.cols * term.rows;
+            }
 
-        let evalexp = eval(expr);
         
-        //let color = evalexp % 256
-        let color = Math.floor(evalexp % 256)
-        let ch = ' ';
-    
-        if(asciiEnabled)
-        {
-            ch = String.fromCharCode(evalexp % 64 + 32);
-        }
+            let evalexp = eval(expr);
+            
+            //let color = evalexp % 256
+            let color = Math.floor(evalexp % 256)
+            let ch = ' ';
         
-        r=(color+100)%256
-        //g=(color+50)%256
-        b=0
-        if(drawBg)
-        {
-            b=color;
-        }
+            if(asciiEnabled)
+            {
+                ch = String.fromCharCode(evalexp % 64 + 32);
+            }
+            
+            r=(color+100)%256
+            //g=(color+50)%256
+            b=0
+            if(drawBg)
+            {
+                b=color;
+            }
 
 
-        buf[i]=(`\x1b[38;5;${r}m\x1b[48;5;${b}m${ch}`);
-        exprResultElement.value = color
-        tElement.value = t
-        
-        i += 1; 
-        if(i >= bufSize)
+            buf[i]=(`\x1b[38;5;${r}m\x1b[48;5;${b}m${ch}`);
+            exprResultElement.value = color
+            tElement.value = t
+            
+            i += 1; 
+            if(i >= bufSize)
+            {
+                i=0;
+                term.write(buf.join(''));
+                await sleep(1000/fpsCap);
+            }
+            t += 1;
+            if(error)
+            {
+                error = false;
+                document.getElementById("errorMessage").innerHTML = ``;
+            }
+        }
+        catch(err)
         {
-            i=0;
-            term.write(buf.join(''));
+            if(!error)
+            {
+                error = true;
+                document.getElementById("errorMessage").innerHTML = `Error in expression: ${err.message}`;
+            }
             await sleep(1000/fpsCap);
         }
-        t += 1;
     }
+    
 }
 
 function updateSettings()
