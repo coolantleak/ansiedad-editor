@@ -6,7 +6,7 @@ let drawBg = true;
 let scrollerMode = false;
 let width = 80;
 let height = 25;
-let fontSize = 25;
+let fontSize = 16;
 let scrollerBufsize = 64;
 
 // Globals
