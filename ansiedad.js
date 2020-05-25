@@ -1,9 +1,9 @@
 // Settings and default values
-let expr = `t`
-let fpsCap = 2;
-let asciiEnabled = true;
+let expr = `Math.max(0, Math.sin(t))+(t*4)`
+let fpsCap = 30;
+let asciiEnabled = false;
 let scrollerMode = false;
-let width = 32;
+let width = 128;
 let height = 16;
 let fontSize = 25;
 let scrollerBufsize = 64;
@@ -81,11 +81,16 @@ document.getElementById('applyButton').onclick = function() {
 }
 
 document.getElementById('linkButton').onclick = function() {
-    let link = `http://190.195.94.176:9502/ansiedad?expr=${btoa(expr)}&fps=${fpsCap}`
+    let link = `http://190.195.94.176:9502/ansiedad?cols=${width}&rows=${height}&expr=${btoa(expr)}&fps=${fpsCap}`
 
     if(!asciiEnabled)
     {
         link += `&asciiOff`
+    }
+
+    if(scrollerMode)
+    {
+        link += `&scrollBuf=${scrollerBufsize}`
     }
 
     console.log(`Link: ${link}`)
@@ -111,16 +116,21 @@ if(urlParams.has('asciiOff'))
     asciiEnabled = !urlParams.has('asciiOff')
 }
 
-if(urlParams.has('scroller'))
+if(urlParams.has('scrollBuf'))
 {
-    scrollerMode = urlParams.has('scroller')
+    scrollerMode = true;
+    scrollerBufsize = urlParams.get('scrollBuf')
 }
 
-if(urlParams.has('scrollerBuf'))
+if(urlParams.has('cols'))
 {
-    scrollerBufsize = urlParams.get('scrollerBuf')
+    width = urlParams.get('cols');
 }
 
+if(urlParams.has('rows'))
+{
+    height = urlParams.get('rows');
+}
 
 // Set view
 document.getElementById('exprField').value = expr;
