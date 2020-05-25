@@ -13,9 +13,16 @@
 
 input
 {
-    background-color: rgb(20, 20, 20);
-    border-style: solid;
+    background-color: rgb(15, 15, 15);
+    border-style: none;
     border-width: 1px;
+}
+
+input:disabled
+{
+    border-style: none;
+    color: rgb(112, 112, 112);    
+    background-color: black;
 }
 
 li
