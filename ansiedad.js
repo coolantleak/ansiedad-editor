@@ -142,7 +142,6 @@ document.getElementById('linkButton').onclick = function() {
 }
 
 // Read input parameters. If parameters are not specified, the values will hold the default values defined at the program start
-
 const urlParams = new URLSearchParams(window.location.search);
 
 if(urlParams.has('expr'))
@@ -187,5 +186,20 @@ document.getElementById('fpsField').value = fpsCap;
 document.getElementById('asciiEnabledCheckbox').checked = asciiEnabled;
 document.getElementById('drawBgCheckbox').checked = drawBg;
 document.addEventListener('keydown', onSubmit);
+
+ // Make everything visible only after the font is loaded 
+ document.getElementsByTagName("body")[0].style.display = "none"; // Hide everything
+
+ if (document && document.fonts) {    
+    setTimeout(function () { // Do not block page loading
+      document.fonts.load('16px unscii').then(() => {
+        document.getElementsByTagName("body")[0].style.display = ""; // Show everything back
+        main()
+      })
+    }, 0)
+  } else {
+    // Fallback if API does not exist 
+    document.getElementsByTagName("body")[0].style.display = "";
+  }
 
 main();
