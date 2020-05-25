@@ -29,6 +29,8 @@ async function main(e) {
     let i = 0;
     
     const buf=[]
+
+    let exprResultElement = document.getElementById('exprResult')
     
     while (true) 
     {
@@ -46,7 +48,8 @@ async function main(e) {
             ch = String.fromCharCode(evalexp % 64 + 32);
         }
         
-        buf[i]=(`\x1b[48;5;${color}m${ch}`);
+        buf[i]=(`\x1b[38;5;${(color+100)%256}m\x1b[48;5;${color}m${ch}`);
+        exprResultElement.value = color
         
         i += 1; 
         if(i >= bufSize)
