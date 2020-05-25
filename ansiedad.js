@@ -32,7 +32,7 @@ async function main(e) {
         cols: width,
         rows: height,
         fontSize: fontSize,
-        
+        fontFamily: 'unscii'
     });
     term.open(document.getElementById('terminal'));
 
