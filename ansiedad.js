@@ -1,10 +1,10 @@
 // Settings and default values
-let expr = `Math.max(0, Math.sin(t))+(t*4)`
-let fpsCap = 30;
+let expr = `t`
+let fpsCap = 15;
 let asciiEnabled = false;
 let scrollerMode = false;
-let width = 128;
-let height = 16;
+let width = 80;
+let height = 25;
 let fontSize = 25;
 let scrollerBufsize = 64;
 
@@ -14,6 +14,14 @@ let term;
 
 function sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+function onSubmit(e)
+{
+    if(e.keyCode === 13)
+    {
+        updateSettings()
+    }
 }
 
 async function main(e) {
@@ -31,25 +39,37 @@ async function main(e) {
     const buf=[]
 
     let exprResultElement = document.getElementById('exprResult')
+    let tElement = document.getElementById('t')
     
     while (true) 
     {
-        updateLiveSettings()
+        if(scrollerMode)
+        {
+            bufSize = scrollerBufsize;
+        }
+        else
+        {
+            bufSize = term.cols * term.rows;
+        }
 
         let evalexp = eval(expr);
         
-        let color = evalexp % 256;
+        //let color = evalexp % 256
+        let color = Math.floor(evalexp % 256)
         let ch = ' ';
     
-        if(t%width==0) term.write('\n')
-        
         if(asciiEnabled)
         {
             ch = String.fromCharCode(evalexp % 64 + 32);
         }
         
-        buf[i]=(`\x1b[38;5;${(color+100)%256}m\x1b[48;5;${color}m${ch}`);
+        r=(color+100)%256
+        //g=(color+50)%256
+        b=color
+
+        buf[i]=(`\x1b[38;5;${r}m\x1b[48;5;${b}m${ch}`);
         exprResultElement.value = color
+        tElement.value = t
         
         i += 1; 
         if(i >= bufSize)
@@ -62,25 +82,14 @@ async function main(e) {
     }
 }
 
-function updateLiveSettings()
+function updateSettings()
 {
-    if(scrollerMode)
-    {
-        bufSize = scrollerBufsize;
-    }
-    else
-    {
-        bufSize = term.cols * term.rows;
-    }
-}
-
-document.getElementById('applyButton').onclick = function() {
     console.log('Updating values')
+    
+
     expr = document.getElementById('exprField').value;
     fpsCap = parseInt(document.getElementById('fpsField').value);
     asciiEnabled = document.getElementById('asciiEnabledCheckbox').checked;
-    console.log(`expr=${expr}`)
-    console.log(`fpsCap=${fpsCap}`)
 }
 
 document.getElementById('linkButton').onclick = function() {
@@ -139,4 +148,7 @@ if(urlParams.has('rows'))
 document.getElementById('exprField').value = expr;
 document.getElementById('fpsField').value = fpsCap;
 document.getElementById('asciiEnabledCheckbox').checked = asciiEnabled;
+
+document.addEventListener('keydown', onSubmit);
+
 main();
