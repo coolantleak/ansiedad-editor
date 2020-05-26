@@ -1,0 +1,41 @@
+@font-face {
+    font-family: 'unscii';
+    src: url('assets/unscii-16.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+* {
+    font-family: 'unscii';
+    font-size: 12pt;
+    color: gainsboro;
+}
+
+input
+{
+    background-color: rgb(15, 15, 15);
+    border-style: none;
+    border-width: 1px;
+}
+
+input:disabled
+{
+    border-style: none;
+    color: rgb(112, 112, 112);    
+    background-color: black;
+}
+
+li
+{
+    margin-top: 5px;
+}
+
+button
+{
+    background-color: rgb(20, 20, 20);
+}
+
+body
+{
+    background-color: black;
+}
