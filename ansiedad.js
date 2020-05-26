@@ -120,7 +120,8 @@ function updateSettings()
 }
 
 document.getElementById('linkButton').onclick = function() {
-    let link = `http://190.195.94.176:9502/ansiedad?cols=${width}&rows=${height}&expr=${btoa(expr)}&fps=${fpsCap}`
+    let encodedExpr = encodeURI(expr)
+    let link = `http://190.195.94.176:9502/ansiedad?cols=${width}&rows=${height}&expr=${encodedExpr}&fps=${fpsCap}`
 
     if(!asciiEnabled)
     {
@@ -146,7 +147,8 @@ const urlParams = new URLSearchParams(window.location.search);
 
 if(urlParams.has('expr'))
 {
-    expr = atob(urlParams.get('expr'));
+    let param = urlParams.get('expr')
+    expr = decodeURI(param);
 }
 
 if(urlParams.has('fps'))
