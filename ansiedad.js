@@ -1,11 +1,11 @@
 // Settings and default values
-let expr = `t`
+let expr = `t<<1 | t>>5`
 let fpsCap = 15;
 let asciiEnabled = true;
 let drawBg = true;
 let scrollerMode = false;
-let width = 80;
-let height = 25;
+let width = 128;
+let height = 32;
 let fontSize = 16;
 let scrollerBufsize = 64;
 
