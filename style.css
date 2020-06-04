@@ -25,6 +25,11 @@ input:disabled
     background-color: black;
 }
 
+ul
+{
+    list-style-type: none;
+}
+
 li
 {
     margin-top: 5px;
