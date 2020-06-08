@@ -1,26 +1,15 @@
 // Settings and default values
 
 //*
-let expr = `t%16 + 240 >> 2`
-let fps = 15;
-let asciiEnabled = true;
-let drawBg = true;
-let width = 128;
-let height = 32;
+let expr = `y`
+let fps = 60;
+let asciiEnabled = false;
+let drawBg = false;
+let width = 80;
+let height = 25;
 let fontSize = 16;
 let scrollerMode = false;
-let scrollerBufsize = 64;
-/*/
-let expr = `t`;
-let fps = 1;
-let asciiEnabled = true;
-let drawBg = false;
-let width = 128;
-let height = 32;
-let fontSize = 16;
-let scrollerMode = true;
 let scrollerBufsize = 1;
-//*/
 
 // Globals
 let bufSize;
@@ -28,10 +17,12 @@ let term;
 let error = false;
 
 // Init expression public variables
-let t = 0; // Increments on each character
+let t = 0.0; // Increments on each character
 let q = 0; // Increments on each frame
 let w = width;
 let h = height;
+let x = 0; // fragCoord.x
+let y = 0; // fragCoord.y
 
 // FPS control
 let fpsInterval, startTime, now, then, elapsed;
@@ -39,7 +30,8 @@ let stop = false;
 
 const buf = [];
 
-let exprResultElement = document.getElementById("exprResult");
+let colorElement = document.getElementById("colorField");
+let resultElement = document.getElementById("resultField");
 let tElement = document.getElementById("t");
 
 function sleep(ms) {
@@ -91,27 +83,36 @@ function step(time) {
             then = now - (elapsed % fpsInterval);
 
             while (i < bufSize) {
+                // Set character coord values
+                let col = (t % w);
+                if (col == (w - 1)) col = w; // Snap
+                row = Math.ceil(((t % (w * h)) + 1) / w);
 
-                // Save next char into buffer
-               
+                x = col / w;
+                y = row / h;
 
+                // Process expression
                 let evalexp = eval(expr);
-                let color = Math.floor(evalexp % 256);
+                resultElement.value = evalexp;
                 let ch = " ";
-
+                
+                // Save next char into buffer
                 if (asciiEnabled) {
-                    ch = String.fromCharCode((evalexp % 64) + 32);
+                    //ch = String.fromCharCode((evalexp % 64) + 32);
+                    ch = String.fromCharCode((evalexp % 10) + 0x2502);
+                    //ch = String.fromCharCode(0x0001);
                 }
-
-                r = (color + 100) % 256;
-                g = 0;
-                b = 0;
+                
+                let color = Math.floor(evalexp * 255);
+                let r = color;
+                let g = color;
+                let b = color;
                 if (drawBg) {
                     b = color;
                 }
+                buf[i] = `\x1b[38;5;${r}m\x1b[48;2;${r};${g};${b}m${ch}`;
 
-                buf[i] = `\x1b[38;5;${r}m\x1b[48;5;${b}m${ch}`;
-                exprResultElement.value = color;
+                colorElement.value = color;
                 tElement.value = t;
                 i += 1;
                 t += 1; // Increment character varying variable
@@ -141,8 +142,6 @@ function step(time) {
 }
 
 function updateSettings() {
-    console.log("Updating values");
-
     expr = document.getElementById("exprField").value;
     fps = parseInt(document.getElementById("fpsField").value);
     asciiEnabled = document.getElementById("asciiEnabledCheckbox").checked;
